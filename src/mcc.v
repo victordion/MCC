@@ -54,7 +54,7 @@ module mcc(clk, rstn, ld_en, y_final_memaddr, y_final_rdy, sub_x_addr, sub_b_add
     input  [`ADC_BIT_WIDTH * `CROSSBAR_SIZE - 1 : 0] ADC_in;
     output [`MUX_SEL_WIDTH * `CROSSBAR_SIZE - 1 : 0] mux_sel;
 
-    reg [`STATE_WIDTH - 1 : 0] state;
+    
     reg [5:0] curr_iter_num;
     reg [`CROSSBAR_SIZE_BIN - 1 : 0] curr_prog_diag_idx;
     reg [`DAC_BIT_WIDTH - 1 : 0] target_resistance[`CROSSBAR_SIZE_BIN - 1 : 0];
@@ -81,40 +81,69 @@ module mcc(clk, rstn, ld_en, y_final_memaddr, y_final_rdy, sub_x_addr, sub_b_add
     assign DAC_out[2 * `DATA_WIDTH - 1 : `DATA_WIDTH] = a_result;
     
     adder u_adder(clk, rstn, a_in_1, a_in_2, a_result);
+   
+
+
+    reg [`STATE_WIDTH - 1 : 0] curr_state;
+    reg [`STATE_WIDTH - 1 : 0] next_state;
+    
+    always @ (posedge clk or negedge rstn) begin
+        if(!rstn)     
+            curr_state <= IDLE;  
+        else     
+            curr_state <= next_state;
+    end
+
+    always @ (curr_state) begin 
+        case(curr_state)
+            IDLE: begin
+                if(ld_en == 1'b1) begin
+                    next_state = LOAD_SUB_X;
+                end
+            end
+
+            LOAD_SUB_X: begin
+                next_state = LOAD_SUB_Y;
+            end
+            
+            LOAD_SUB_Y: begin
+                next_state = LOAD_SUB_B;
+            end
+            
+            LOAD_SUB_B: begin
+                if(sub_b_ld_count == 0) begin
+                    next_state = PROG_CROSSBAR;
+                end
+            end
+        
+            PROG_CROSSBAR: begin
+                if(curr_iter_num == ITER_MAX) begin
+                    next_state = SENSE_CROSSBAR;
+                end
+            end
+            
+            SENSE_CROSSBAR: begin
+                next_state = EVAL_CROSSBAR;
+            end
+            
+            EVAL_CROSSBAR: begin
+                next_state = MERGE_RESULT;
+            end
+
+            MERGE_RESULT: begin
+                next_state = IDLE;
+            end
+        endcase
+    end
 
     always @ (posedge clk or negedge rstn) begin
-        if(!rstn) begin
-            state <= IDLE;
-        end
-        else begin
-            case(state)
-                IDLE: begin
-                    if(ld_en == 1'b1) begin
-                        state <= LOAD_SUB_X;
-                    end
-                end
-
-                LOAD_SUB_X: begin
-                    state <= LOAD_SUB_Y;
-                end
-                
-                LOAD_SUB_Y: begin
-                    state <= LOAD_SUB_B;
-                end
-                
-                LOAD_SUB_B: begin
-                    if(sub_b_ld_count == 0) begin
-                        state <= PROG_CROSSBAR;
-                    end
-                end
-            
-                PROG_CROSSBAR: begin
-                    if(curr_iter_num == ITER_MAX) begin
-                        state <= EVAL_CROSSBAR;
-                    end
-                end
-            endcase
-        end
+        if(!rstn)
+             curr_prog_diag_idx = 0;
+         else begin
+             
+             if(next_state == PROG_CROSSBAR && curr_prog_diag_idx < {`CROSSBAR_SIZE_BIN{1'b1}})
+                 curr_prog_diag_idx = curr_prog_diag_idx + 1'b1;
+         end
     end
 
 endmodule
