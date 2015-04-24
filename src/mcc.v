@@ -2,18 +2,101 @@
 // Author: Jianwei Cui
 // Date: 04/20/2015
 // All Rights Reserved
-//
-//
+// Modified on: Fri Apr 24 14:33:00 EDT 2015
+
 `define DAC_BIT_WIDTH 32
 `define ADC_BIT_WIDTH 32
 `define MEMORY_ADDR_WIDTH 32
 `define MEMORY_DATA_WIDTH 32
-`define DATA_WIDTH 32 
 `define CROSSBAR_SIZE 32
 `define CROSSBAR_SIZE_BIN 5
 `define MUX_SEL_WIDTH 5
 `define STATE_WIDTH 5
 
+`define XBAR_SIZE 32
+`define XBAR_DIM_WIDTH 5
+// a mtxdim_width of 20 can support a marix size of 2^dim_width
+`define MTXDIM_WIDTH 20
+`define DATA_WIDTH 8
+
+module mcc(
+   
+ 
+    clk,
+    rstn,
+     x_values_in,
+     x_values_valid_in,
+     b_value_in,
+     b_diag_in,
+     b_offset_in,
+    block_valid_in,
+    new_diagonal,
+
+     adc_in,
+     adc_valid_in,
+     dac_out,
+     dac_valid_out,
+
+     y_values_out,
+     y_values_valid,
+
+     mux_sel
+     );
+
+
+
+    input clk;
+    input rstn;
+    input [`XBAR_SIZE * `DATA_WIDTH - 1    : 0] x_values_in;
+    input [`XBAR_SIZE * `DATA_WIDTH - 1    : 0] x_values_valid_in;
+    input [`DATA_WIDTH - 1 : 0]     b_value_in;
+    input [`XBAR_DIM_WIDTH - 1 : 0] b_diag_in;
+    input [`XBAR_DIM_WIDTH - 1 : 0] b_offset_in;
+    input block_valid_in;
+    input new_diagonal;
+
+    output [`DATA_WIDTH * `XBAR_SIZE - 1 : 0] adc_in;
+    output adc_valid_in;
+    output [`DATA_WIDTH * `XBAR_SIZE - 1 : 0] dac_out;
+    output dac_valid_out;
+
+    output [`XBAR_SIZE * `DATA_WIDTH - 1 : 0] y_values_out;
+    output y_values_valid;
+
+    output [`XBAR_DIM_WIDTH * `XBAR_SIZE - 1 : 0] mux_sel;
+
+    reg [`XBAR_SIZE * `DATA_WIDTH - 1 : 0] x_values_reg;
+    
+    always @ (posedge clk or negedge rstn) begin
+        if(!rstn) begin
+            x_values_reg <= x_values_in;
+        end
+        else begin
+            if(x_values_valid_in)
+                x_values_reg <= x_values_in;
+        end
+    end
+    integer c;
+    reg [`DATA_WIDTH - 1 : 0] dac_data_reg [0: `XBAR_SIZE - 1];
+
+    always @ (posedge clk or negedge rstn) begin
+        if(!rstn) begin
+                for( c = 0; c < `XBAR_SIZE; c = c + 1) begin
+                    dac_data_reg[c] <= 0;
+                end
+        end
+        else begin
+            dac_data_reg[b_offset_in] <= b_value_in; 
+        end
+    end
+
+    assign y_values_valid = dac_data_reg[0][0];
+
+endmodule
+
+
+
+/*
 module mcc(clk, rstn, ld_en, y_final_memaddr, y_final_rdy, sub_x_addr, sub_b_addr, sub_y_addr, mem_addr, mem_en, mem_rdy, 
             mem_data_in, mem_data_out, DAC_out, ADC_in, mux_sel);
 
@@ -148,4 +231,4 @@ module mcc(clk, rstn, ld_en, y_final_memaddr, y_final_rdy, sub_x_addr, sub_b_add
 
 endmodule
 
-
+*/
