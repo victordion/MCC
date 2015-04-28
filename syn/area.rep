@@ -1,0 +1,24 @@
+ 
+****************************************
+Report : area
+Design : mcc
+Version: B-2008.09-SP4
+Date   : Mon Apr 27 22:51:34 2015
+****************************************
+
+Library(s) Used:
+
+    gscl45nm (File: /home/hd02/j/jcui/45nmlib/osu_freepdk_1.0/lib/files/gscl45nm.db)
+
+Number of ports:             1356
+Number of nets:            361029
+Number of cells:           350866
+Number of references:          15
+
+Combinational area:       1159218.400252
+Noncombinational area:    96049.755844
+Net Interconnect area:      undefined  (No wire load specified)
+
+Total cell area:          1255268.156096
+Total area:                 undefined
+1

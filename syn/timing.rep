@@ -1,2 +1,58 @@
-Error: Current design is not defined. (UID-4)
-0
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : mcc
+Version: B-2008.09-SP4
+Date   : Mon Apr 27 22:50:32 2015
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: typical   Library: gscl45nm
+Wire Load Model Mode: top
+
+  Startpoint: mtx_y_value_out_count_reg[0]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: y_values_out_reg[0]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  mtx_y_value_out_count_reg[0]/CLK (DFFSR)                0.00 #     0.00 r
+  mtx_y_value_out_count_reg[0]/Q (DFFSR)                  0.11       0.11 f
+  U356055/Y (INVX1)                                       0.76       0.88 r
+  U330767/Y (BUFX2)                                       0.17       1.05 r
+  U312762/Y (INVX1)                                       0.24       1.29 f
+  U115824/Y (MUX2X1)                                      0.07       1.36 f
+  U112867/Y (MUX2X1)                                      0.06       1.43 r
+  U115827/Y (MUX2X1)                                      0.03       1.46 f
+  U112869/Y (MUX2X1)                                      0.05       1.51 r
+  U115838/Y (MUX2X1)                                      0.06       1.57 f
+  U112875/Y (MUX2X1)                                      0.09       1.66 r
+  U115881/Y (MUX2X1)                                      0.05       1.71 f
+  U112897/Y (MUX2X1)                                      0.07       1.78 r
+  U116052/Y (MUX2X1)                                      0.04       1.82 f
+  U112983/Y (MUX2X1)                                      0.05       1.87 r
+  y_values_out_reg[0]/D (DFFSR)                           0.00       1.87 r
+  data arrival time                                                  1.87
+
+  clock clk (rise edge)                                   2.00       2.00
+  clock network delay (ideal)                             0.00       2.00
+  y_values_out_reg[0]/CLK (DFFSR)                         0.00       2.00 r
+  library setup time                                     -0.08       1.92
+  data required time                                                 1.92
+  --------------------------------------------------------------------------
+  data required time                                                 1.92
+  data arrival time                                                 -1.87
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.04
+
+
+1

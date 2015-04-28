@@ -1,2 +1,40 @@
-Error: Current design is not defined. (UID-4)
-0
+Loading db file '/home/hd02/j/jcui/45nmlib/osu_freepdk_1.0/lib/files/gscl45nm.db'
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
+Warning: Design has unannotated sequential cell outputs. (PWR-415)
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : mcc
+Version: B-2008.09-SP4
+Date   : Mon Apr 27 22:51:31 2015
+****************************************
+
+
+Library(s) Used:
+
+    gscl45nm (File: /home/hd02/j/jcui/45nmlib/osu_freepdk_1.0/lib/files/gscl45nm.db)
+
+
+Operating Conditions: typical   Library: gscl45nm
+Wire Load Model Mode: top
+
+
+Global Operating Voltage = 1.1  
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+  Cell Internal Power  = 136.6196 mW   (77%)
+  Net Switching Power  =  40.6017 mW   (23%)
+                         ---------
+Total Dynamic Power    = 177.2213 mW  (100%)
+
+Cell Leakage Power     =   6.6800 mW
+
+1
